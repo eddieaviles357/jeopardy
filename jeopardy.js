@@ -116,7 +116,7 @@ function showLoadingView() {
 
   // show the loading icon
   $("#spin-container").show();
-  $("#start").addClass("disabled").text("Loading...");
+  $("#start").addClass("disabled").text("Loading!");
 }
 
 /** Remove the loading spinner and update the button used to fetch data. */
