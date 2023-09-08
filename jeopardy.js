@@ -27,14 +27,14 @@ async function getCategoryIds() {
 
 async function getCategory(catId) {
   try {
-    let {data: category} = await axios.get(`${BASE_API_URL}category`, { params: { id: catId }});
-    // choose random clue
-    let randomClues = _.sampleSize(category.clues, NUM_CLUES).map(cat => ({
-      question: cat.question,
-      answer: cat.answer,
-      showing: null
-    }));
-    return { title: category.title, clues: randomClues };
+    const options = { params: { id: catId } };
+    let {data: category} = await axios.get(`${BASE_API_URL}category`, options);
+    // choose random clue using lodash library
+    let clues = _.sampleSize(category.clues, NUM_CLUES).map(
+      ({question, answer}) => ( { question, answer, showing: null } )
+    );
+    const { title } = category;
+    return { title, clues };
   } catch (err) {
     console.log("ERROR in getCategory", err);
   }
@@ -116,17 +116,13 @@ function showLoadingView() {
 
   // show the loading icon
   $("#spin-container").show();
-  $("#start")
-    .addClass("disabled")
-    .text("Loading...");
+  $("#start").addClass("disabled").text("Loading...");
 }
 
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
-  $("#start")
-    .removeClass("disabled")
-    .text("Restart!");
+  $("#start").removeClass("disabled").text("Restart!");
   $("#spin-container").hide();
 }
 
@@ -139,7 +135,7 @@ function hideLoadingView() {
 
 async function setupAndStart() {
   try {
-    let isLoading = $("#start").text() === "Loading...";
+    let isLoading = $("#start").text() === "Loading!";
     if (!isLoading) {
       showLoadingView();
   
